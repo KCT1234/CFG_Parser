@@ -9,13 +9,18 @@ class OutputScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CFGParser parser = CFGParser(grammar, maxDepth: 5);
+    CFGParser parser = CFGParser(grammar, maxDepth: 5);  // Adjust maxDepth as needed
 
-    // Generate strings starting from the start symbol (assumed to be "S")
-    List<String> generatedStrings = parser.generateStrings("S");
+    // Generate strings starting from the start symbol (S)
+    Set<String> generatedStrings = parser.generateStrings("S");
+
+    // Sort the strings based on length, and keep the first 10 varied outputs
+    List<String> sortedStrings = generatedStrings.toList()
+      ..sort((a, b) => a.length.compareTo(b.length));
+    sortedStrings = sortedStrings.take(10).toList();  // Take the first 10 strings
 
     // Check if any strings were generated
-    if (generatedStrings.isEmpty) {
+    if (sortedStrings.isEmpty) {
       return Scaffold(
         appBar: AppBar(
           title: Text("Generated Strings"),
@@ -34,12 +39,12 @@ class OutputScreen extends StatelessWidget {
         title: Text("Generated Strings"),
       ),
       body: ListView.builder(
-        itemCount: generatedStrings.length,
+        itemCount: sortedStrings.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(
-                'String ${index + 1} [ ${generatedStrings[index]} ]',
-                style: TextStyle(fontSize: 18)
+              'String ${index + 1} [ ${sortedStrings[index]} ]',
+              style: TextStyle(fontSize: 18),
             ),
           );
         },
