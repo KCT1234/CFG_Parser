@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:atf_finals/models/grammar.dart';
+import 'package:atf_finals/models/grammar.dart'; // Ensure this exists
 import 'output_view.dart';
 
 class GrammarInputScreen extends StatefulWidget {
@@ -16,86 +16,147 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create CFG"),
-      ),
-      body: ListView.builder(
-        itemCount: _nonTerminalControllers.length + 1,
-        itemBuilder: (context, index) {
-          if (index < _nonTerminalControllers.length) {
-            return Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _nonTerminalControllers[index],
-                    decoration: InputDecoration(labelText: "Non-terminal"),
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _productionControllers[index],
-                    decoration: InputDecoration(labelText: "Production"),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      _nonTerminalControllers.removeAt(index);
-                      _productionControllers.removeAt(index);
-                    });
-                  },
-                )
+        title: Text(
+          "CFG - Context Free Grammar",
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF4A90E2), // Primary color
+                Color(0xFFB3C8E5), // Secondary color
               ],
-            );
-          } else {
-            return ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _nonTerminalControllers.add(TextEditingController());
-                  _productionControllers.add(TextEditingController());
-                });
-              },
-              child: Text("Add Rule"),
-            );
-          }
-        },
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 10, // Add shadow for depth
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.check),
-        onPressed: () {
-          // Clear any previous grammar before adding new rules
-          _grammar = Grammar();
-
-          for (int i = 0; i < _nonTerminalControllers.length; i++) {
-            String nonTerminal = _nonTerminalControllers[i].text;
-            String production = _productionControllers[i].text;
-
-            // Make sure both non-terminal and production are not empty
-            if (nonTerminal.isNotEmpty && production.isNotEmpty) {
-              _grammar.addRule(nonTerminal, production);
-            }
-          }
-
-          // Debugging output: Print grammar rules to console
-          _grammar.rules.forEach((key, value) {
-            print('Non-terminal: $key, Productions: $value');
-          });
-
-          // Navigate to the output screen only if there are rules
-          if (_grammar.rules.isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OutputScreen(grammar: _grammar),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(
+              "Enter Non-terminals and Productions:",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _nonTerminalControllers.length + 1,
+                itemBuilder: (context, index) {
+                  if (index < _nonTerminalControllers.length) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _nonTerminalControllers[index],
+                              decoration: InputDecoration(
+                                labelText: "Non-terminal",
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blueAccent),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              controller: _productionControllers[index],
+                              decoration: InputDecoration(
+                                labelText: "Production",
+                                border: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blueAccent),
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                _nonTerminalControllers.removeAt(index);
+                                _productionControllers.removeAt(index);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _nonTerminalControllers.add(TextEditingController());
+                          _productionControllers.add(TextEditingController());
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: Text("Add Rule"),
+                    );
+                  }
+                },
               ),
-            );
-          } else {
-            // Show a message if no valid grammar rules were added
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Please add at least one valid rule!')),
-            );
-          }
-        },
+            ),
+            SizedBox(height: 16),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _grammar = Grammar();
+
+                  for (int i = 0; i < _nonTerminalControllers.length; i++) {
+                    String nonTerminal = _nonTerminalControllers[i].text.trim();
+                    String production = _productionControllers[i].text.trim();
+
+                    if (nonTerminal.isNotEmpty && production.isNotEmpty) {
+                      _grammar.addRule(nonTerminal, production);
+                    }
+                  }
+
+                  if (_grammar.rules.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OutputScreen(grammar: _grammar),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Please add at least one valid rule!')),
+                    );
+                  }
+                },
+                icon: Icon(Icons.check), // Check icon
+                label: Text(" Generate"), // Label text
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
