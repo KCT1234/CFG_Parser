@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:atf_finals/models/parse_tree.dart';
 import 'package:atf_finals/models/parser.dart';
 
 class ParseTreeScreen extends StatelessWidget {
@@ -9,14 +10,12 @@ class ParseTreeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Try to generate the parse tree for the input string using the parser
-    String parseTree;
-    
+    List<ParseTreeRow> rows;
+
     try {
-      parseTree = parser.generateParseTree(string);
+      rows = parser.generateParseTreeRows(string);
     } catch (e) {
-      // If there's an error generating the parse tree, show an error message
-      parseTree = "Error generating parse tree: ${e.toString()}";
+      rows = [ParseTreeRow(rule: 'Error', application: 'Error', result: 'Error')];
     }
 
     return Scaffold(
@@ -26,9 +25,36 @@ class ParseTreeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Text(
-            parseTree,
-            style: TextStyle(fontSize: 16, fontFamily: 'Courier'),
+          child: DataTable(
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Text(
+                  'Rule',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Application',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Result',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+            rows: rows.map((row) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(Text(row.rule)),
+                  DataCell(Text(row.application)),
+                  DataCell(Text(row.result)),
+                ],
+              );
+            }).toList(),
           ),
         ),
       ),

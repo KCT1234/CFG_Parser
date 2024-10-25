@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:atf_finals/models/grammar.dart';
 import 'package:atf_finals/models/parser.dart';
+import 'package:atf_finals/models/parse_tree.dart'; // Ensure this path is valid
 import 'package:atf_finals/views/parsetree_view.dart'; // Ensure this exists
 
 class OutputScreen extends StatelessWidget {

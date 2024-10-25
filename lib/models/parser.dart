@@ -1,4 +1,5 @@
 import 'grammar.dart';
+import 'parse_tree.dart';
 
 class CFGParser {
   Grammar grammar;
@@ -6,6 +7,7 @@ class CFGParser {
 
   CFGParser(this.grammar, {this.maxDepth = 5});
 
+  // Method 1: Generate possible strings
   Set<String> generateStrings(String symbol, [int depth = 0]) {
     if (depth > maxDepth) {
       return {};
@@ -39,40 +41,67 @@ class CFGParser {
       }
     }
 
-    // Ensure unique results and vary string lengths by limiting duplicates
     return results.where((result) => result.length <= maxDepth + 5).toSet();
   }
 
-  // New Method: Generate a simple parse tree string for the given input
-  String generateParseTree(String input) {
-    return _buildParseTree('S', input, 0);
+  // Method to generate structured parse tree rows for the table view
+  List<ParseTreeRow> generateParseTreeRows(String input) {
+    return _buildParseTreeRows('S', input, input, 0);
   }
 
-  String _buildParseTree(String symbol, String input, int depth) {
-    if (depth > maxDepth) {
-      return '';  // Limit recursion depth
+  List<ParseTreeRow> _buildParseTreeRows(String symbol, String target, String current, int depth) {
+    List<ParseTreeRow> rows = [];
+
+    if (depth > maxDepth || current.isEmpty) {
+      return rows;
     }
 
     List<String>? productions = grammar.getProductions(symbol);
     if (productions == null || productions.isEmpty) {
-      return '$symbol -> (no production)\n';
+      return rows;
     }
 
     for (var production in productions) {
-      String result = '$symbol -> $production\n';
+      String result = current;
+      String rule = '$symbol -> $production';
+      String application = '';
 
-      int inputIndex = 0;
+      // Attempt to apply the production to the current string
+      bool match = true;
+      int index = 0;
+
       for (var part in production.split('')) {
-        if (inputIndex < input.length && part == input[inputIndex]) {
-          inputIndex++;
-          result += _buildParseTree(part, input, depth + 1);
-        } else if (RegExp(r'[A-Z]').hasMatch(part)) {
-          result += _buildParseTree(part, input, depth + 1);
+        if (index >= current.length) {
+          match = false;
+          break;
+        }
+
+        if (RegExp(r'[A-Z]').hasMatch(part)) {
+          // Non-terminal: recursively apply the rule
+          List<ParseTreeRow> subRows = _buildParseTreeRows(part, target, current.substring(index), depth + 1);
+          rows.addAll(subRows);
+          if (subRows.isEmpty) {
+            match = false;
+            break;
+          }
+        } else if (part == current[index]) {
+          // Terminal: match with current string
+          application += part;
+          index++;
+        } else {
+          // No match found, break
+          match = false;
+          break;
         }
       }
-      return result;  // Return the first match (simple tree)
+
+      if (match && result == target) {
+        // Only add row if the result matches the target and no duplicate rule
+        rows.add(ParseTreeRow(rule: rule, application: application, result: result));
+        break; // Stop once we have a match
+      }
     }
 
-    return '';  // Fallback in case no match is found
+    return rows;
   }
 }
