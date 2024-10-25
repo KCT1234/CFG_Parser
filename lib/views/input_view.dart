@@ -16,7 +16,7 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "CFG - Context Free Grammar",
           style: TextStyle(
             fontSize: 22,
@@ -25,7 +25,7 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
         ),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color(0xFF4A90E2), // Primary color
@@ -42,11 +42,11 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
+            const Text(
               "Enter Non-terminals and Productions:",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 itemCount: _nonTerminalControllers.length + 1,
@@ -72,7 +72,7 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
                           Expanded(
                             child: TextField(
                               controller: _nonTerminalControllers[index],
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Non-terminal",
                                 border: OutlineInputBorder(),
                                 focusedBorder: OutlineInputBorder(
@@ -81,11 +81,11 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: TextField(
                               controller: _productionControllers[index],
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: "Production",
                                 border: OutlineInputBorder(),
                                 focusedBorder: OutlineInputBorder(
@@ -117,13 +117,13 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child: Text("Add Rule"),
+                      child: const Text("Add Rule"),
                     );
                   }
                 },
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
@@ -147,12 +147,12 @@ class _GrammarInputScreenState extends State<GrammarInputScreen> {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Please add at least one valid rule!')),
+                      const SnackBar(content: Text('Please add at least one valid rule!')),
                     );
                   }
                 },
-                icon: Icon(Icons.check), // Check icon
-                label: Text(" Generate"), // Label text
+                icon: const Icon(Icons.check), // Check icon
+                label: const Text(" Generate"), // Label text
               ),
             ),
           ],

@@ -6,7 +6,7 @@ class ParseTreeScreen extends StatelessWidget {
   final String string;
   final CFGParser parser;
 
-  ParseTreeScreen({required this.string, required this.parser});
+  const ParseTreeScreen({super.key, required this.string, required this.parser});
 
   @override
   Widget build(BuildContext context) {

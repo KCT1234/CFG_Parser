@@ -7,7 +7,7 @@ import 'package:atf_finals/views/parsetree_view.dart'; // Ensure this exists
 class OutputScreen extends StatelessWidget {
   final Grammar grammar;
 
-  OutputScreen({required this.grammar});
+  const OutputScreen({required this.grammar});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class OutputScreen extends StatelessWidget {
     if (sortedStrings.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "Generated Strings and Parse Tree Output",
             style: TextStyle(
               fontSize: 22,
@@ -30,7 +30,7 @@ class OutputScreen extends StatelessWidget {
           ),
           centerTitle: true,
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Color(0xFF4A90E2), // Primary color
@@ -49,7 +49,7 @@ class OutputScreen extends StatelessWidget {
             },
           ),
         ),
-        body: Center(
+        body: const Center(
           child: Text(
             'No strings generated from the given grammar.',
             style: TextStyle(fontSize: 18),
@@ -60,7 +60,7 @@ class OutputScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Generated Strings and Parse Tree Output",
           style: TextStyle(
             fontSize: 22,
@@ -69,7 +69,7 @@ class OutputScreen extends StatelessWidget {
         ),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color(0xFF4A90E2), // Primary color
@@ -82,7 +82,7 @@ class OutputScreen extends StatelessWidget {
         ),
         elevation: 10, // Add shadow for depth
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Navigate back to the previous screen
           },
@@ -100,7 +100,7 @@ class OutputScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.black26,
                         blurRadius: 4.0,
@@ -114,7 +114,7 @@ class OutputScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           'String ${index + 1}: [ ${sortedStrings[index]} ]',
-                          style: TextStyle(fontSize: 18, fontFamily: 'Lora'),
+                          style: const TextStyle(fontSize: 18, fontFamily: 'Lora'),
                         ),
                       ),
                       ElevatedButton(
@@ -129,7 +129,7 @@ class OutputScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text("Show Parse Tree"),
+                        child: const Text("Show Parse Tree"),
                       ),
                     ],
                   ),
